@@ -1,1 +1,8 @@
 # init git ignore
+
+# ignore all files except *.cpp
+/src/*
+!/src/*.cpp
+
+# ignore .vscode
+.vscode
