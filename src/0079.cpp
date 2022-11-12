@@ -11,12 +11,12 @@
 
 #include "iostream"
 #include "vector"
+#include "map"
 using namespace std;
 
 class Solution {
 public:
     vector<vector<char>> board;
-    vector<vector<bool>> isVisited;
     vector<vector<int>> dirs = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
     string word;
     int curPtr;
@@ -25,31 +25,51 @@ public:
     bool exist(vector<vector<char>>& board, string word) {
         this ->board = board;
         this ->word = word;
-        this ->isVisited.resize(board.size(), vector<bool>(board[0].size(), false));
-        
-        for (int i = 0; i < board.size() && !res; i++) {
-            for (int j = 0; j < board[i].size() && !res; j++) {
-                backTracking(i, j);
+
+        map<char, int> charsInBoard;
+        for (auto line: board) {
+            for (auto point: line) {
+                charsInBoard[point]++;
             }
         }
-
-        return res;
-    }
-
-    void backTracking(int x, int y) {
-        if (isValid(x, y) && !isVisited[x][y] && word[curPtr] == board[x][y] && !res) {
-            isVisited[x][y] = true;
-            curPtr++;
-            if (curPtr == word.length()) {
-                res = true;
-            } else {
-                for (auto dir: dirs) {
-                    backTracking(x + dir[0], y + dir[1]);
+        for (char c: word) {
+            if (!charsInBoard[c]) {
+                return false;
+            }
+        }
+        
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board[i].size(); j++) {
+                if (backTracking(i, j)) {
+                    return true;
                 }
             }
-            isVisited[x][y] = false;
+        }
+
+        return false;
+    }
+
+    bool backTracking(int x, int y) {
+        if (curPtr == word.length()) {
+            return true;
+        }
+        if (!isValid(x, y)) {
+            return false;
+        }
+
+        char temp = board[x][y];
+        if (word[curPtr] == temp) {
+            board[x][y] = '$';
+            curPtr++;
+            for (auto dir: dirs) {
+                if (backTracking(x + dir[0], y + dir[1])) {
+                    return true;
+                }
+            }
+            board[x][y] = temp;
             curPtr--;
         }
+        return false;
     }
 
     bool isValid(int x, int y) {
