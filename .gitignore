@@ -3,6 +3,7 @@
 # ignore all files except *.cpp
 /src/*
 !/src/*.cpp
+!/src/utils
 
 # ignore .vscode
 .vscode
