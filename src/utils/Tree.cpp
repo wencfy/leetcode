@@ -32,16 +32,29 @@ void Tree::preOrderNonRecur() {
     TreeNode *node = root;
 
     std::stack<TreeNode*> st;
+    // while (node || !st.empty()) {
+    //     if (node) {
+    //         visit(node);
+    //         if (node->right) {
+    //             st.push(node->right);
+    //         }
+    //         if (node->left) {
+    //             st.push(node->left);
+    //         }
+    //         node = nullptr;
+    //     } else {
+    //         node = st.top();
+    //         st.pop();
+    //     }
+    // }
+
     while (node || !st.empty()) {
         if (node) {
             visit(node);
             if (node->right) {
                 st.push(node->right);
             }
-            if (node->left) {
-                st.push(node->left);
-            }
-            node = nullptr;
+            node = node->left;
         } else {
             node = st.top();
             st.pop();
